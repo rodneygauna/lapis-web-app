@@ -1,0 +1,12 @@
+<% self.title = "Dashboard" %>
+
+<h1 class="h4 mb-3 text-center">Welcome!</h1>
+
+<p class="text-center">
+  You are logged in as
+  <strong><%= self.current_user.email %></strong>.
+</p>
+
+<form method="POST" action="/logout" class="d-grid">
+  <button type="submit" class="btn btn-secondary">Log out</button>
+</form>
