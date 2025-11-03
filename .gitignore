@@ -49,3 +49,5 @@ scgi_temp/
 uwsgi_temp/
 # Files
 nginx.conf.compiled
+# Using Moonscript, so ignore Lua files
+*.lua
