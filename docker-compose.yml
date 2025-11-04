@@ -1,0 +1,35 @@
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-lapis_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-lapis_password}
+      POSTGRES_DB: ${POSTGRES_DB:-lapis_db}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - lapis-network
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-lapis_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-lapis_password}
+      POSTGRES_DB: ${POSTGRES_DB:-lapis_db}
+      POSTGRES_HOST: ${POSTGRES_HOST:-postgres}
+      LAPIS_SECRET_KEY: ${LAPIS_SECRET_KEY:-your_secret_key_here}
+    depends_on:
+      - postgres
+    volumes:
+      - ./app:/app
+    networks:
+      - lapis-network
+    entrypoint: ["/bin/bash", "-c"]
+    command: ["moonc . && /usr/local/openresty/luajit/bin/lapis migrate && /usr/local/openresty/luajit/bin/lapis server development"]
+
+volumes:
+  pgdata:
+
+networks:
+  lapis-network:

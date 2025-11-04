@@ -39,3 +39,10 @@ luac.out
 *.x86_64
 *.hex
 
+#### Lapis specific ignores ####
+app/*_temp/
+app/*.compiled
+app/logs
+
+#### Moonscript compiled Lua files ####
+app/**/*.lua
