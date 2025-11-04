@@ -1,5 +1,0 @@
-TOP = $(TUP_CWD)
-
-.gitignore
-
-: foreach *.moon |> moonc %f |> %B.lua $(TOP)/<moon>
