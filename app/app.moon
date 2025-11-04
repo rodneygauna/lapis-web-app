@@ -1,5 +1,6 @@
 lapis = require "lapis"
 bcrypt = require "bcrypt"
+csrf = require "lapis.csrf"
 User = require "models.user"
 Auth = require "controllers.auth"
 
@@ -17,5 +18,6 @@ class extends lapis.Application
 
   -- Homepage
   [index: "/"]: =>
+    @csrf_token = csrf.generate_token(@)
     render: true, current_user: @current_user
 

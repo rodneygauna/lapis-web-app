@@ -1,6 +1,8 @@
 lapis = require "lapis"
 bcrypt = require "bcrypt"
+csrf = require "lapis.csrf"
 respond_to = require("lapis.application").respond_to
+capture_errors = require("lapis.application").capture_errors
 import encode_query_string from require "lapis.util"
 User = require "models.user"
 
@@ -8,11 +10,13 @@ class Auth extends lapis.Application
   -- Register
   [register: "/register"]: respond_to {
     GET: =>
+      @csrf_token = csrf.generate_token(@)
       @title = "User Registration"
       @error = @params.error
       render: "register"
 
-    POST: =>
+    POST: capture_errors =>
+      csrf.assert_token(@)
       email = tostring(@params.email or "")\lower!
       password = @params.password or ""
       confirm_password = @params.confirm_password or ""
@@ -36,11 +40,14 @@ class Auth extends lapis.Application
   -- Login
   [login: "/login"]: respond_to {
     GET: =>
+      @csrf_token = csrf.generate_token(@)
       @title = "Login"
       @error = @params.error
       render: "login"
 
-    POST: =>
+    POST: capture_errors =>
+      csrf.assert_token(@)
+
       email = tostring(@params.email or "")\lower!
       password = @params.password or ""
 
@@ -55,6 +62,7 @@ class Auth extends lapis.Application
   -- Logout
   [logout: "/logout"]: =>
     if @req.method == "POST"
+      csrf.assert_token(@)
       @session.current_user_id = nil
     return redirect_to: @url_for("index")
 

@@ -2,6 +2,7 @@
 <% if current_user then %>
   <p class="lead">Hello, <strong><%= current_user.email %></strong>!</p>
   <form method="POST" action="/logout" style="display: inline;">
+    <input type="hidden" name="csrf_token" value="<%= csrf_token %>" />
     <button type="submit" class="btn btn-danger">Log out</button>
   </form>
 <% else %>
