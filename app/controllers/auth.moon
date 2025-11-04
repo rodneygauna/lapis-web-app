@@ -12,7 +12,7 @@ class Auth extends lapis.Application
     GET: =>
       @csrf_token = csrf.generate_token(@)
       @title = "User Registration"
-      @error = @params.error
+      @error_message = @params.error_message
       render: "register"
 
     POST: capture_errors =>
@@ -21,20 +21,32 @@ class Auth extends lapis.Application
       password = @params.password or ""
       confirm_password = @params.confirm_password or ""
 
+      -- Validate required fields
       if email == "" or password == ""
-        return redirect: "/register"
+        @error_message = "Email and password are required"
+        @csrf_token = csrf.generate_token(@)
+        @title = "User Registration"
+        return status: 400, render: "register"
 
-      if email == confirm_password
-        return redirect: "/register"
+      -- Check if passwords match (fixed: was checking equality instead of inequality)
+      if password != confirm_password
+        @error_message = "Passwords do not match"
+        @csrf_token = csrf.generate_token(@)
+        @title = "User Registration"
+        return status: 400, render: "register"
 
+      -- Check if user already exists
       if User\find email: email
-        return redirect: "/register"
+        @error_message = "An account with this email already exists"
+        @csrf_token = csrf.generate_token(@)
+        @title = "User Registration"
+        return status: 400, render: "register"
 
       hash = bcrypt.digest password, 12
       user = User\create { email: email, password_hash: hash }
 
       @session.current_user_id = user.id
-      return redirect_to: "/"
+      return redirect_to: @url_for("index")
   }
 
   -- Login
@@ -42,7 +54,7 @@ class Auth extends lapis.Application
     GET: =>
       @csrf_token = csrf.generate_token(@)
       @title = "Login"
-      @error = @params.error
+      @error_message = @params.error_message
       render: "login"
 
     POST: capture_errors =>
@@ -51,12 +63,22 @@ class Auth extends lapis.Application
       email = tostring(@params.email or "")\lower!
       password = @params.password or ""
 
+      -- Validate required fields
+      if email == "" or password == ""
+        @error_message = "Email and password are required"
+        @csrf_token = csrf.generate_token(@)
+        @title = "Login"
+        return status: 400, render: "login"
+
       user = User\find email: email
       unless user and bcrypt.verify password, user.password_hash
-        return redirect_to: @url_for("login")
+        @error_message = "Invalid email or password"
+        @csrf_token = csrf.generate_token(@)
+        @title = "Login"
+        return status: 400, render: "login"
 
       @session.current_user_id = user.id
-      return redirect_to: "/"
+      return redirect_to: @url_for("index")
   }
 
   -- Logout

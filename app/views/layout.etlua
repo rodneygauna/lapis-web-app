@@ -15,9 +15,9 @@
   </head>
   <body class="bg-light">
     <div class="container py-5">
-      <% if self.error then %>
+      <% if error_message then %>
         <div class="alert alert-danger" role="alert">
-          <%= self.error %>
+          <%= error_message %>
         </div>
       <% end %>
 
