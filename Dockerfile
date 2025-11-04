@@ -6,6 +6,9 @@ RUN apt install -y libssl-dev git build-essential
 RUN /usr/local/openresty/luajit/bin/luarocks install lapis
 RUN /usr/local/openresty/luajit/bin/luarocks install moonscript
 RUN /usr/local/openresty/luajit/bin/luarocks install pgmoon
+RUN /usr/local/openresty/luajit/bin/luarocks install luasocket
+RUN /usr/local/openresty/luajit/bin/luarocks install bcrypt
+RUN /usr/local/openresty/luajit/bin/luarocks install busted
 
 # Set up the application directory
 RUN mkdir /app

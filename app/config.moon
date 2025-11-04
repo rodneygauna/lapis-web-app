@@ -6,9 +6,9 @@ config "development", ->
   num_workers 1
   port 8080
   session_name "lapis_session_dev"
-  secret os.getenv("LAPIS_SECRET") or "development_secret"
+  secret os.getenv("LAPIS_SECRET_KEY") or "development_secret"
   postgres ->
-    host os.getenv("POSTGRES_HOST") or "localhost"
+    host os.getenv("POSTGRES_HOST") or "postgres"
     user os.getenv("POSTGRES_USER") or "lapis_user"
     password os.getenv("POSTGRES_PASSWORD") or "lapis_password"
     database os.getenv("POSTGRES_DB") or "lapis_db"

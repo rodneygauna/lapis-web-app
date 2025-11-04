@@ -9,7 +9,8 @@ import create_table, types from schema
       {"id", types.serial}
       {"email", types.varchar, unique: true, null: false}
       {"password_hash", types.varchar, null: false}
-      {"created_at", types.time, default: db.raw("CURRENT_TIMESTAMP")}
+      {"created_at", types.time}
+      {"updated_at", types.time}
       "PRIMARY KEY (id)"
     }
 }

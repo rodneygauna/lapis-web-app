@@ -2,9 +2,14 @@ services:
   postgres:
     image: postgres:15
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-lapis_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-lapis_password}
-      POSTGRES_DB: ${POSTGRES_DB:-lapis_db}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
@@ -14,13 +19,14 @@ services:
     ports:
       - "8080:8080"
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-lapis_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-lapis_password}
-      POSTGRES_DB: ${POSTGRES_DB:-lapis_db}
-      POSTGRES_HOST: ${POSTGRES_HOST:-postgres}
-      LAPIS_SECRET_KEY: ${LAPIS_SECRET_KEY:-your_secret_key_here}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      LAPIS_SECRET_KEY: ${LAPIS_SECRET_KEY}
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     volumes:
       - ./app:/app
     networks:

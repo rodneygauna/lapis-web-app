@@ -39,6 +39,9 @@ luac.out
 *.x86_64
 *.hex
 
+# .env files
+.env
+
 #### Lapis specific ignores ####
 app/*_temp/
 app/*.compiled
