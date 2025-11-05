@@ -36,7 +36,7 @@ services:
     networks:
       - lapis-network
     entrypoint: ["/bin/bash", "-c"]
-    command: ["moonc . && /usr/local/openresty/luajit/bin/lapis migrate && /usr/local/openresty/luajit/bin/lapis server development"]
+    command: ["/usr/local/openresty/luajit/bin/lapis migrate && /usr/local/openresty/luajit/bin/lapis server development"]
 
 volumes:
   pgdata:
