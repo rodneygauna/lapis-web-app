@@ -46,6 +46,3 @@ luac.out
 app/*_temp/
 app/*.compiled
 app/logs
-
-#### Moonscript compiled Lua files ####
-app/**/*.lua
